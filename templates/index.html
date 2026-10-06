@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salia — Educación Sexual Integral</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* --- TEMA CLARO (Por defecto) --- */
+            --bg-main: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --bg-nav: rgba(248, 250, 252, 0.9);
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --border-light: #E2E8F0;
+            
+            --warning-bg: #FEF2F2;
+            --warning-text: #991B1B;
+            --warning-border: #FECACA;
+
+            /* Identidad de Marca (Morado) */
+            --accent-primary: #8B5CF6; /* Morado original */
+            --accent-hover: #7C3AED;
+            --accent-light: rgba(139, 92, 246, 0.1);
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --shadow-floating: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            /* --- TEMA OSCURO --- */
+            --bg-main: #0F172A;
+            --bg-card: #1E293B;
+            --bg-nav: rgba(15, 23, 42, 0.9);
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --border-light: #334155;
+
+            --warning-bg: rgba(153, 27, 27, 0.2);
+            --warning-text: #FCA5A5;
+            --warning-border: #7F1D1D;
+            
+            --accent-primary: #9F7AEA; /* Morado un poco más claro para contraste */
+            --accent-hover: #B794F4;
+            --accent-light: rgba(159, 122, 234, 0.15);
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
+            --shadow-floating: 0 20px 25px -5px rgba(0,0,0,0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 16px 5%; display: flex; align-items: center; justify-content: space-between;
+            background: var(--bg-nav);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-light);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 10px; text-decoration: none;
+            font-size: 1.25rem; font-weight: 700; color: var(--text-primary);
+        }
+        .nav-brand svg { width: 24px; height: 24px; color: var(--accent-primary); }
+        .nav-links { display: flex; align-items: center; gap: 24px; }
+        .nav-link {
+            color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-link:hover { color: var(--accent-primary); }
+        
+        /* BOTÓN MODO OSCURO/CLARO */
+        .theme-toggle {
+            background: var(--accent-light); border: none; border-radius: 50%;
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--accent-primary); transition: all 0.2s ease;
+        }
+        .theme-toggle:hover { background: var(--accent-primary); color: white; }
+        .theme-toggle svg { width: 18px; height: 18px; }
+
+        /* HEADER / HERO */
+        .hero { padding: 140px 5% 80px; max-width: 900px; margin: 0 auto; text-align: center; }
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.1; margin-bottom: 24px;
+            color: var(--text-primary); letter-spacing: -0.02em;
+        }
+        .hero-title span { color: var(--accent-primary); }
+        .hero-subtitle {
+            font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;
+        }
+
+        /* SECCIONES */
+        section { padding: 60px 5%; max-width: 1000px; margin: 0 auto; }
+        .section-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 24px; color: var(--text-primary); }
+        
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border-light);
+            border-radius: var(--radius-md); padding: 32px; box-shadow: var(--shadow-sm);
+            margin-bottom: 24px; transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* QUÉ ES SALIA */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .info-item h3 { font-size: 1.1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .info-item h3 svg { width: 20px; height: 20px; color: var(--accent-primary); }
+        .info-item p { color: var(--text-secondary); font-size: 0.95rem; }
+
+        /* AVISO LEGAL */
+        .disclaimer-box {
+            background: var(--warning-bg); border: 1px solid var(--warning-border);
+            border-radius: var(--radius-md); padding: 24px; color: var(--warning-text);
+            display: flex; gap: 16px; align-items: flex-start; margin-top: 40px;
+            transition: all 0.3s ease;
+        }
+        .disclaimer-box svg { flex-shrink: 0; width: 24px; height: 24px; margin-top: 2px; }
+        .disclaimer-content h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+        .disclaimer-content p { font-size: 0.9rem; line-height: 1.5; margin-bottom: 12px; }
+        .disclaimer-content p:last-child { margin-bottom: 0; }
+
+        /* MEDIOS DE AYUDA */
+        .resources-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .resource-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px; background: var(--bg-main); border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm); transition: all 0.3s ease;
+        }
+        .resource-info h4 { font-size: 1rem; color: var(--text-primary); }
+        .resource-info p { font-size: 0.85rem; color: var(--text-secondary); }
+        .resource-number { font-weight: 700; font-size: 1.1rem; color: var(--accent-primary); }
+
+        /* FOOTER */
+        footer {
+            text-align: center; padding: 40px 5%; border-top: 1px solid var(--border-light);
+            color: var(--text-muted); font-size: 0.85rem; margin-top: 40px;
+        }
+
+        /* WIDGET DE CHAT */
+        .chat-widget { position: fixed; bottom: 30px; right: 30px; z-index: 200; }
+        .chat-toggle {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: var(--accent-primary); border: none; color: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: var(--shadow-md); transition: all 0.2s ease;
+        }
+        .chat-toggle:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: var(--shadow-floating);}
+        .chat-toggle svg { width: 24px; height: 24px; }
+        .chat-toggle .close-icon { display: none; }
+        .chat-toggle.active .chat-icon { display: none; }
+        .chat-toggle.active .close-icon { display: block; }
+
+        .chat-panel {
+            position: fixed; bottom: 100px; right: 30px; width: 380px; max-width: calc(100vw - 40px);
+            height: 550px; max-height: calc(100vh - 120px); background: var(--bg-card);
+            border: 1px solid var(--border-light); border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-floating); display: flex; flex-direction: column; overflow: hidden;
+            opacity: 0; transform: translateY(10px); pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .chat-panel.open { opacity: 1; transform: translateY(0); pointer-events: all; }
+
+        .chat-header {
+            padding: 16px 20px; border-bottom: 1px solid var(--border-light);
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--bg-card);
+        }
+        .chat-header-info { display: flex; align-items: center; gap: 12px; }
+        .chat-avatar {
+            width: 36px; height: 36px; background: var(--accent-light); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: var(--accent-primary);
+        }
+        .chat-header-text h3 { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
+        .chat-header-text p { font-size: 0.75rem; color: var(--text-secondary); }
+        
+        .clear-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; border-radius: 4px; }
+        .clear-btn:hover { color: var(--accent-primary); background: var(--accent-light); }
+
+        .chat-body {
+            flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px;
+            background: var(--bg-main);
+        }
+        .chat-body::-webkit-scrollbar { width: 6px; }
+        .chat-body::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+        
+        .chat-message {
+            max-width: 85%; padding: 12px 16px; border-radius: var(--radius-md);
+            font-size: 0.9rem; line-height: 1.5;
+        }
+        .chat-message.bot { 
+            background: var(--bg-card); color: var(--text-primary); align-self: flex-start; 
+            border: 1px solid var(--border-light); border-bottom-left-radius: 4px; 
+        }
+        .chat-message.user { 
+            background: var(--accent-primary); color: white; align-self: flex-end; 
+            border-bottom-right-radius: 4px; 
+        }
+
+        .chat-input-area {
+            padding: 16px; border-top: 1px solid var(--border-light); background: var(--bg-card);
+            display: flex; gap: 12px; align-items: center;
+        }
+        .chat-input {
+            flex: 1; padding: 10px 16px; background: var(--bg-main); border: 1px solid var(--border-light); color: var(--text-primary);
+            border-radius: 20px; font-size: 0.9rem; outline: none; transition: border-color 0.2s;
+            font-family: inherit; resize: none; height: 42px; overflow: hidden;
+        }
+        .chat-input:focus { border-color: var(--accent-primary); }
+        .chat-input::placeholder { color: var(--text-muted); }
+        
+        .chat-send {
+            width: 40px; height: 40px; border-radius: 50%; background: var(--accent-primary);
+            color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+        }
+        .chat-send:hover { background: var(--accent-hover); }
+        .chat-send svg { width: 18px; height: 18px; }
+
+        /* Loader */
+        .typing { display: flex; gap: 4px; padding: 12px 16px; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); border-bottom-left-radius: 4px; align-self: flex-start; width: max-content; }
+        .typing span { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: blink 1.4s infinite both; }
+        .typing span:nth-child(2) { animation-delay: 0.2s; } .typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 12px 5%; }
+            .nav-links { gap: 12px; }
+            .nav-link { display: none; /* Oculta textos de menú en móvil, deja botón de tema */ }
+            .chat-panel { right: 10px; bottom: 100px; width: calc(100vw - 20px); }
+            .chat-widget { bottom: 20px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="#" class="nav-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Salia
+    </a>
+    <div class="nav-links">
+        <a href="#about" class="nav-link">Sobre el Asistente</a>
+        <a href="#ayuda" class="nav-link">Medios de Ayuda</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+            <!-- El icono se inyecta vía JS según el tema -->
+        </button>
+    </div>
+</nav>
+
+<header class="hero">
+    <h1 class="hero-title">Educación Sexual<br><span>Clara, Segura y Confiable</span></h1>
+    <p class="hero-subtitle">Salia es tu asistente virtual de consulta. Un espacio diseñado para resolver tus dudas sobre salud, bienestar y prevención desde la privacidad y el respeto.</p>
+</header>
+
+<section id="about">
+    <div class="card">
+        <h2 class="section-title">¿Qué es y qué hace Salia?</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Orientación Educativa</h3>
+                <p>Proporciona información general sobre anatomía, métodos anticonceptivos, salud reproductiva y prevención de enfermedades (ETS).</p>
+            </div>
+            <div class="info-item">
+                <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Confidencialidad</h3>
+                <p>Tus consultas son anónimas. No recolectamos información personal ni guardamos historiales que te identifiquen.</p>
+            </div>
+            <div class="info-item">
+                <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Espacio sin juicios</h3>
+                <p>Una inteligencia artificial entrenada para responder de manera imparcial, respetuosa e inclusiva, sin tabúes ni prejuicios.</p>
+            </div>
+        </div>
+
+        <div class="disclaimer-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div class="disclaimer-content">
+                <h4>Aviso Legal y de Responsabilidad Médica</h4>
+                <p><strong>Salia NO es un médico ni un profesional de la salud.</strong> Este chat es una herramienta estrictamente educativa e informativa respaldada por Inteligencia Artificial.</p>
+                <p>La información proporcionada aquí <strong>no sustituye el consejo, diagnóstico o tratamiento médico profesional.</strong> El chat no está diseñado ni capacitado para gestionar crisis, atender emergencias médicas, ni intervenir en situaciones de riesgo inminente (violencia, abuso o ideación suicida).</p>
+                <p>El uso de este sistema es bajo responsabilidad del usuario. Si tienes un problema de salud urgente, por favor consulta inmediatamente a un médico presencial o comunícate con las líneas de atención de tu país.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="ayuda">
+    <div class="card">
+        <h2 class="section-title">Líneas de Ayuda y Emergencia</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 24px;">Si te encuentras en una situación de riesgo, vulnerabilidad o necesitas atención médica inmediata, comunícate con las autoridades competentes. <i>(Líneas de atención en Colombia)</i></p>
+        
+        <ul class="resources-list">
+            <li class="resource-item">
+                <div class="resource-info">
+                    <h4>Línea Única de Emergencias</h4>
+                    <p>Policía, ambulancias y emergencias generales en todo el territorio.</p>
+                </div>
+                <span class="resource-number">123</span>
+            </li>
+            <li class="resource-item">
+                <div class="resource-info">
+                    <h4>Línea Púrpura (Orientación a Mujeres)</h4>
+                    <p>Atención a mujeres víctimas de violencia y orientación en salud.</p>
+                </div>
+                <span class="resource-number">155</span>
+            </li>
+            <li class="resource-item">
+                <div class="resource-info">
+                    <h4>Línea de Apoyo Psicológico y Salud Mental</h4>
+                    <p>Primeros auxilios psicológicos y escucha activa (Secretaría de Salud).</p>
+                </div>
+                <span class="resource-number">106</span>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2026 Salia - Plataforma de Educación Integral. Todos los derechos reservados.</p>
+</footer>
+
+<!-- WIDGET DE CHAT -->
+<div class="chat-widget">
+    <button class="chat-toggle" onclick="toggleChat()" aria-label="Abrir chat">
+        <svg class="chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg class="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="chat-panel" id="chatPanel">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="chat-header-text">
+                    <h3>Asistente Salia</h3>
+                    <p>En línea • Bot Educativo</p>
+                </div>
+            </div>
+            <button class="clear-btn" onclick="limpiarChat()" title="Limpiar historial">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+        </div>
+        
+        <div class="chat-body" id="chatBody">
+            <div class="chat-message bot">
+                Hola, soy Salia, un asistente educativo impulsado por IA. Puedes preguntarme sobre salud sexual, prevención o bienestar. (Recuerda que no soy médico ni gestiono emergencias). ¿En qué te ayudo?
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Escribe tu pregunta..." onkeypress="handleKeyPress(event)" autocomplete="off">
+            <button class="chat-send" onclick="enviarMensaje()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* LÓGICA MODO OSCURO/CLARO */
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    
+    // Iconos SVG
+    const iconSun = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+    const iconMoon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
+    // Recuperar preferencia de tema
+    const savedTheme = localStorage.getItem('salia-theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    themeToggleBtn.innerHTML = savedTheme === 'dark' ? iconSun : iconMoon;
+
+    // Cambiar tema
+    themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('salia-theme', newTheme);
+        themeToggleBtn.innerHTML = newTheme === 'dark' ? iconSun : iconMoon;
+    });
+
+    /* LÓGICA DEL CHAT */
+    const chatPanel = document.getElementById('chatPanel');
+    const chatToggle = document.querySelector('.chat-toggle');
+    const chatBody = document.getElementById('chatBody');
+    const chatInput = document.getElementById('chatInput');
+
+    function toggleChat() {
+        chatPanel.classList.toggle('open');
+        chatToggle.classList.toggle('active');
+        if(chatPanel.classList.contains('open')) chatInput.focus();
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            enviarMensaje();
+        }
+    }
+
+    function appendMessage(text, sender) {
+        const div = document.createElement('div');
+        div.className = `chat-message ${sender}`;
+        div.textContent = text;
+        chatBody.appendChild(div);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function showTyping() {
+        const div = document.createElement('div');
+        div.className = 'typing';
+        div.id = 'typingIndicator';
+        div.innerHTML = '<span></span><span></span><span></span>';
+        chatBody.appendChild(div);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function removeTyping() {
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
+    }
+
+    async function enviarMensaje() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        appendMessage(message, 'user');
+        chatInput.value = '';
+        showTyping();
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            });
+            
+            const data = await response.json();
+            removeTyping();
+            
+            if (data.response) {
+                appendMessage(data.response, 'bot');
+            } else {
+                appendMessage("Error al procesar la respuesta.", 'bot');
+            }
+        } catch (error) {
+            removeTyping();
+            appendMessage("No se pudo conectar al servidor.", 'bot');
+        }
+    }
+
+    async function limpiarChat() {
+        if(!confirm("¿Borrar el historial de chat?")) return;
+        
+        try {
+            await fetch('/api/limpiar', { method: 'POST' });
+            chatBody.innerHTML = `
+                <div class="chat-message bot">
+                    Historial borrado. Hola de nuevo, ¿en qué te puedo ayudar?
+                </div>
+            `;
+        } catch (error) {
+            console.error("Error al limpiar:", error);
+        }
+    }
+</script>
+</body>
+</html>
